@@ -18,9 +18,9 @@ The PoC specifies pytest under `tests/`, with unit tests for logic that does not
 
 ## Acceptance criteria
 
-- [ ] `pytest` is a dev-dependency in `pyproject.toml`; `poetry install` installs it.
-- [ ] Directory `tests/` exists and is the canonical place for tests.
-- [ ] At least one test file exists (e.g. `tests/test_smoke.py`) and the test passes.
+- [x] `pytest` is a dev-dependency in `pyproject.toml`; `poetry install` installs it.
+- [x] Directory `tests/` exists and is the canonical place for tests.
+- [x] At least one test file exists (e.g. `tests/test_smoke.py`) and the test passes.
 - [ ] `poetry run pytest` executes and exits with success.
 - [ ] No duplicate or conflicting test runner (e.g. only pytest, not unittest as primary).
 
