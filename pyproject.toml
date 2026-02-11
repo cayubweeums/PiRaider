@@ -8,6 +8,7 @@ authors = [
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.14,<4.0"
+package-mode = false
 dependencies = [
     "flet (>=0.80.5,<0.81.0)",
     "rich (>=14.3.2,<15.0.0)",
