@@ -19,11 +19,11 @@ The PoC requires one entrypoint (`main.py`) and a clear layout: Flet under `ui/f
 
 ## Acceptance criteria
 
-- [x] `pyproject.toml` exists with Poetry config, Python version, and dependencies `flet` and `rich`.
+- [x] `pyproject.toml` exists with Poetry config, Python version, and dependencies `flet` and `textual`.
 - [x] `poetry install` runs successfully and creates a lockfile.
 - [x] `main.py` exists at repo root and is the only script users run for the app.
 - [x] `poetry run python main.py` starts the Flet app (window or web window opens; may be minimal).
-- [ ] `poetry run python main.py --tui` starts the TUI (terminal UI; may be minimal, e.g. single Rich screen).
+- [x] `poetry run python main.py --tui` starts the TUI (terminal UI; may be minimal, e.g. single screen).
 - [ ] Directories `ui/flet/`, `ui/tui/`, `core/`, `tests/` exist; `core` has no UI code.
 - [ ] No project dependencies are installed via `pip install -r requirements.txt` or global pip for app deps.
 
