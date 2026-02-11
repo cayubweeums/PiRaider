@@ -24,8 +24,8 @@ The PoC requires one entrypoint (`main.py`) and a clear layout: Flet under `ui/f
 - [x] `main.py` exists at repo root and is the only script users run for the app.
 - [x] `poetry run python main.py` starts the Flet app (window or web window opens; may be minimal).
 - [x] `poetry run python main.py --tui` starts the TUI (terminal UI; may be minimal, e.g. single screen).
-- [ ] Directories `ui/flet/`, `ui/tui/`, `core/`, `tests/` exist; `core` has no UI code.
-- [ ] No project dependencies are installed via `pip install -r requirements.txt` or global pip for app deps.
+- [x] Directories `ui/flet/`, `ui/tui/`, `core/`, `tests/` exist; `core` has no UI code.
+- [x] No project dependencies are installed via `pip install -r requirements.txt` or global pip for app deps.
 
 ## Definition of done
 
@@ -35,5 +35,5 @@ The PoC requires one entrypoint (`main.py`) and a clear layout: Flet under `ui/f
 
 - Use `argparse` or similar; keep flag set small (e.g. `--tui` only for now).
 - Flet: `ft.app(main)` or equivalent in `ui/flet/`; import and run from `main.py`.
-- TUI: Rich `Console` or simple layout; import and run from `main.py`.
+- TUI: Textual; import and run from `main.py`.
 - Optional: `core/__init__.py` and `ui/flet/__init__.py`, `ui/tui/__init__.py` for clean imports.
