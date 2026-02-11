@@ -204,10 +204,10 @@ cython_debug/
 .cursor/
 AGENTS.md
 
-# Agile workspace
-agile/
-
 # Marimo
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Logs
+logs/

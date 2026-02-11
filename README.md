@@ -6,6 +6,9 @@ Porting the amazing work by the team building the [ESP32 Marauder](https://githu
 - If booting from usb:
     - Add `usb_max_current_enable=1` to your `/boot/firmware/config.txt` so you don't get the warning message
 
+## UI 'Vision' Board
+- https://www.reddit.com/r/outrun/comments/134m0u2/build_an_aesthetic_world_fictional_ui/
+
 ## Porting plan
 
 ESP32 Marauder is a WiFi/Bluetooth tool suite that runs as firmware on the ESP32. The goal here is to bring the same kinds of tools and workflows to Python so they run on a Pi or laptop—using an external WiFi/BT dongle and Python or subprocess calls to existing tools where that makes sense.
