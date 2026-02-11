@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/cayubweeums/PiRaider/compare/v1.0.0...v1.1.0) (2026-02-11)
+
+
+### Features
+
+* adds mirror for version in pyproject.toml ([aee8e3f](https://github.com/cayubweeums/PiRaider/commit/aee8e3f8cc6e26ae39198438f98220d9439602e7))
+
 # 1.0.0 (2026-02-09)
 
 
