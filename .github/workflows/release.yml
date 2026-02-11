@@ -24,7 +24,7 @@ jobs:
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
-      - run: poetry install --with dev
+      - run: poetry install --with dev --no-root
       - run: poetry run pytest
 
   create-release:
