@@ -1,3 +1,13 @@
+# [1.3.0](https://github.com/cayubweeums/PiRaider/compare/v1.2.0...v1.3.0) (2026-02-11)
+
+
+### Features
+
+* adds initial test configuration and initial test ([d365dc0](https://github.com/cayubweeums/PiRaider/commit/d365dc05bd7c8b70901ed36c10056769952cd486))
+* adds test workflows ([fb7439c](https://github.com/cayubweeums/PiRaider/commit/fb7439cb1c77d8c4153dc5da26fa0e660170d80d))
+* sets package-mode to be false ([518a006](https://github.com/cayubweeums/PiRaider/commit/518a006671ca27e8b970db2040a8c69c586957f6))
+* sets poetry install with no root ([db97641](https://github.com/cayubweeums/PiRaider/commit/db97641b305120ab798c39f3b7734a79c691af9a))
+
 # [1.2.0](https://github.com/cayubweeums/PiRaider/compare/v1.1.0...v1.2.0) (2026-02-11)
 
 
