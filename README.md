@@ -2,6 +2,10 @@
 
 Porting the amazing work by the team building the [ESP32 Marauder](https://github.com/justcallmekoko/ESP32Marauder) project to Python so it can run on normal hardware (e.g. Raspberry Pi, laptops) without ESP32 firmware level access.
 
+## Requirements
+- If booting from usb:
+    - Add `usb_max_current_enable=1` to your `/boot/firmware/config.txt` so you don't get the warning message
+
 ## Porting plan
 
 ESP32 Marauder is a WiFi/Bluetooth tool suite that runs as firmware on the ESP32. The goal here is to bring the same kinds of tools and workflows to Python so they run on a Pi or laptop—using an external WiFi/BT dongle and Python or subprocess calls to existing tools where that makes sense.
@@ -28,95 +32,111 @@ Tackle passive/sniffing/scanning tools first (e.g beacon sniff, probe sniff, sta
 
 ## Tool structure (UI → upstream code)
 
-Tools are grouped as in the ESP32 Marauder UI. Each section should contain links to the main files in the upstream repo that implement that tool.
+Tools are grouped as in the ESP32 Marauder UI. Implementation status is tracked per tool.
 
-- **WiFi**
-  - Sniffers
-    - [Probe Request Sniff](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Beacon Sniff](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Channel Analyzer](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Deauth Sniff](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Packet Count](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Packet Monitor](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [EAPOL/PMKID Scan](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Detect Pwnagotchi](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Detect Espressif](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Scan APs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Raw Capture](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Station Sniff](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Signal Monitor](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Wardrive](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Station Wardrive](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [MAC Track](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [SAE Commit](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Detect Pineapple](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Detect MultiSSID](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Select probe SSIDs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp)
-  - Scanners
-    - [Ping Scan](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [ARP Scan](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Port Scan All](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [SSH Scan](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Telnet Scan](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [DNS/HTTP/HTTPS/SMTP/RDP](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-  - Attacks
-    - [Beacon Spam List](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Beacon Spam Random](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Evil Portal](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/EvilPortal.cpp)
-    - [Rick Roll Beacon](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Probe Request Flood](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Deauth Flood](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [AP Clone Spam](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Karma](https://github.com/justcallmekoko/ESP32Marauder/wiki/karma)
-    - [Bad Msg](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Sleep Attack](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [SAE Commit Flood](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Deauth Targeted](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-  - General
-    - [Add SSID](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) / [MenuFunctions](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp)
-    - [Generate SSIDs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Save/Load SSIDs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/SDInterface.cpp), [WiFiScan](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Save/Load APs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/SDInterface.cpp), [WiFiScan](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Clear SSIDs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Clear APs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Select APs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp)
-    - [Select Stations](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp)
-    - [Select EP HTML File](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp), [EvilPortal](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/EvilPortal.cpp)
-    - [View AP Info](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Set MACs](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Join WiFi](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Shutdown WiFi/BLE](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-- **Bluetooth**
-  - Sniffers
-    - [Bluetooth Analyzer](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Bluetooth Sniffer](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Flipper Sniff](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [AirTag Sniff](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [AirTag Monitor](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Bluetooth Wardrive](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Detect Card Skimmers](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Flock Sniff](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Flock Wardrive](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-  - Attacks
-    - [Sour Apple](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [SwiftPair Spam](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Samsung BLE Spam](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Google BLE Spam](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Flipper BLE Spam](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [BT Spam All](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-    - [Spoof AirTag](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-- **Device**
-  - Update Firmware
-    - [Web Update](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/SDInterface.cpp) / MarauderOTA
-    - [SD Update](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/SDInterface.cpp)
-    - [ESP8266 Update](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp)
-  - [Device Info](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp), [Display](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/Display.cpp)
-  - [Settings](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/settings.cpp)
-  - [GPS Data](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/GpsInterface.cpp)
-  - [GPS Tracker](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/GpsInterface.cpp), [WiFiScan](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp)
-  - [Reboot](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/CommandLine.cpp)
-- **Bad USB**
-  - [Test BadUSB](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/Keyboard.cpp)
-  - [Run Ducky Script](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/Keyboard.cpp)
+**Status legend:** ✅ Implemented · ◐ Partially implemented · ○ Not implemented · ⊘ Not possible (ESP32-only or no equivalent)
 
-Menu and CLI wiring: [MenuFunctions.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp), [CommandLine.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/CommandLine.cpp).
+### WiFi
+
+| Tool | Status | Reference |
+|------|--------|-----------|
+| *Sniffers* | | |
+| Probe Request Sniff | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Beacon Sniff | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Channel Analyzer | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Deauth Sniff | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Packet Count | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Packet Monitor | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| EAPOL/PMKID Scan | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Detect Pwnagotchi | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Detect Espressif | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Scan APs | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Raw Capture | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Station Sniff | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Signal Monitor | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Wardrive | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Station Wardrive | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| MAC Track | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| SAE Commit | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Detect Pineapple | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Detect MultiSSID | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Select probe SSIDs | ○ | [MenuFunctions.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp) |
+| *Scanners* | | |
+| Ping Scan | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| ARP Scan | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Port Scan All | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| SSH Scan | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Telnet Scan | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| DNS/HTTP/HTTPS/SMTP/RDP | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| *Attacks* | | |
+| Beacon Spam List | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Beacon Spam Random | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Evil Portal | ○ | [EvilPortal.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/EvilPortal.cpp) |
+| Rick Roll Beacon | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Probe Request Flood | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Deauth Flood | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| AP Clone Spam | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Karma | ○ | [karma (wiki)](https://github.com/justcallmekoko/ESP32Marauder/wiki/karma) |
+| Bad Msg | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Sleep Attack | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| SAE Commit Flood | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Deauth Targeted | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| *General* | | |
+| Add SSID | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp), [MenuFunctions.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp) |
+| Generate SSIDs | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Save/Load SSIDs | ○ | [SDInterface.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/SDInterface.cpp), [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Save/Load APs | ○ | [SDInterface.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/SDInterface.cpp), [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Clear SSIDs | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Clear APs | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Select APs | ○ | [MenuFunctions.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp) |
+| Select Stations | ○ | [MenuFunctions.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp) |
+| Select EP HTML File | ○ | [MenuFunctions.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp), [EvilPortal.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/EvilPortal.cpp) |
+| View AP Info | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Set MACs | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Join WiFi | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Shutdown WiFi/BLE | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+
+### Bluetooth
+
+| Tool | Status | Reference |
+|------|--------|-----------|
+| *Sniffers* | | |
+| Bluetooth Analyzer | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Bluetooth Sniffer | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Flipper Sniff | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| AirTag Sniff | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| AirTag Monitor | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Bluetooth Wardrive | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Detect Card Skimmers | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Flock Sniff | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Flock Wardrive | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| *Attacks* | | |
+| Sour Apple | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| SwiftPair Spam | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Samsung BLE Spam | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Google BLE Spam | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Flipper BLE Spam | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| BT Spam All | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Spoof AirTag | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+
+### Device
+
+| Tool | Status | Reference |
+|------|--------|-----------|
+| *Update Firmware* | | |
+| Web Update | ○ | [SDInterface.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/SDInterface.cpp) / MarauderOTA |
+| SD Update | ○ | [SDInterface.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/SDInterface.cpp) |
+| ESP8266 Update | ○ | [MenuFunctions.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp) |
+| Device Info | ○ | [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp), [Display.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/Display.cpp) |
+| Settings | ○ | [settings.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/settings.cpp) |
+| GPS Data | ○ | [GpsInterface.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/GpsInterface.cpp) |
+| GPS Tracker | ○ | [GpsInterface.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/GpsInterface.cpp), [WiFiScan.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/WiFiScan.cpp) |
+| Reboot | ○ | [CommandLine.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/CommandLine.cpp) |
+| Menu and CLI wiring | ○ | [MenuFunctions.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/MenuFunctions.cpp), [CommandLine.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/CommandLine.cpp) |
+
+### Bad USB
+
+| Tool | Status | Reference |
+|------|--------|-----------|
+| Test BadUSB | ○ | [Keyboard.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/Keyboard.cpp) |
+| Run Ducky Script | ○ | [Keyboard.cpp](https://github.com/justcallmekoko/ESP32Marauder/blob/master/esp32_marauder/Keyboard.cpp) |
