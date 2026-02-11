@@ -18,10 +18,10 @@ The PoC and project principles require KISS. To keep future work aligned, agent 
 
 ## Acceptance criteria
 
-- [ ] `.cursorrules` contains an explicit KISS statement (short, actionable).
-- [ ] `AGENTS.md` contains an explicit KISS statement in a section that agents are instructed to follow.
-- [ ] `.cursor/rules/project.mdc` (or the single project rule file in use) contains the same or equivalent KISS statement.
-- [ ] Wording is consistent: "simplest implementation that meets requirements", "avoid unnecessary abstraction", "avoid extra complexity" (or equivalent).
+- [x] `.cursorrules` contains an explicit KISS statement (short, actionable).
+- [x] `AGENTS.md` contains an explicit KISS statement in a section that agents are instructed to follow.
+- [x] `.cursor/rules/project.mdc` (or the single project rule file in use) contains the same or equivalent KISS statement.
+- [x] Wording is consistent: "simplest implementation that meets requirements", "avoid unnecessary abstraction", "avoid extra complexity" (or equivalent).
 
 ## Definition of done
 
