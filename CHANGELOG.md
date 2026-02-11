@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/cayubweeums/PiRaider/compare/v1.1.0...v1.2.0) (2026-02-11)
+
+
+### Features
+
+* adds basic structure and stories ([0c58621](https://github.com/cayubweeums/PiRaider/commit/0c58621001d457274e316881dc3ddaaf71865bd2))
+* adds initial TUI ([bb1593f](https://github.com/cayubweeums/PiRaider/commit/bb1593f65688477aa3dacf7561b614a4c5ff7485))
+
 # [1.1.0](https://github.com/cayubweeums/PiRaider/compare/v1.0.0...v1.1.0) (2026-02-11)
 
 
