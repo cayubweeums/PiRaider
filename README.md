@@ -9,6 +9,11 @@ Porting the amazing work by the team building the [ESP32 Marauder](https://githu
 ## UI 'Vision' Board
 - https://www.reddit.com/r/outrun/comments/134m0u2/build_an_aesthetic_world_fictional_ui/
 
+## Fun git visualization command
+```bash
+gource --camera-mode track  --file-filter "__pycache__|\.py[cod]$|__init__\.py$" --viewport 1920x1080 -a 1 -s 1 --output-ppm-stream - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i -   -vcodec libx264 -preset ultrafast -pix_fmt yuv420p output.mp4
+```
+
 ## Porting plan
 
 ESP32 Marauder is a WiFi/Bluetooth tool suite that runs as firmware on the ESP32. The goal here is to bring the same kinds of tools and workflows to Python so they run on a Pi or laptop—using an external WiFi/BT dongle and Python or subprocess calls to existing tools where that makes sense.
