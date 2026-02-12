@@ -3,8 +3,9 @@
 Porting the amazing work by the team building the [ESP32 Marauder](https://github.com/justcallmekoko/ESP32Marauder) project to Python so it can run on normal hardware (e.g. Raspberry Pi, laptops) without ESP32 firmware level access.
 
 ## Requirements
-- If booting from usb:
+- If booting from usb on a PI:
     - Add `usb_max_current_enable=1` to your `/boot/firmware/config.txt` so you don't get the warning message
+- Install `jc`
 
 ## UI 'Vision' Board
 - https://www.reddit.com/r/outrun/comments/134m0u2/build_an_aesthetic_world_fictional_ui/
