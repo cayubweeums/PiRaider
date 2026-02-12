@@ -92,5 +92,5 @@ def parse_indented_output(
 
 
 def to_json(d: dict, **kwargs) -> str:
-    """Serialize parsed output to JSON. Pass kwargs to json.dumps (e.g. indent=2)."""
+    """Serialize parsed output to JSON. Pass kwargs to json.dumps"""
     return json.dumps(d, **kwargs)
