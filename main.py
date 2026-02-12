@@ -25,7 +25,7 @@ FORMAT = '%(asctime)s %(levelname)-8s %(message)s'
 if not os.path.exists('./logs'):
     os.makedirs('./logs')
 logging.basicConfig(filename='./logs/{}.log'.format(_time), format=FORMAT, level=LOG_LEVEL, datefmt="[%X]")
-log = logging.getLogger("frontend_main")
+log = logging.getLogger("main")
 
 install() # Install Rich traceback
 pretty.install() # Install Rich pretty print

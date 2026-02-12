@@ -19,8 +19,8 @@ The PoC requires automatic detection and configuration of interfaces: which WiFi
 
 ## Acceptance criteria
 
-- [ ] `core/radio.py` exists and is importable from the project.
-- [ ] At least one public function returns WiFi capability info (e.g. list of interfaces with monitor capability and band info, or a single aggregate "ready" flag with details).
+- [x] `core/radio.py` exists and is importable from the project.
+- [x] At least one public function returns WiFi capability info (e.g. list of interfaces with monitor capability and band info, or a single aggregate "ready" flag with details).
 - [ ] At least one public function returns Bluetooth adapter status (present, up/usable).
 - [ ] No UI dependencies in `core/radio.py`; no Flet or Rich in core.
 - [ ] If `iw`/`ip`/Bluetooth tools are missing or fail, the module returns safe values (e.g. "not available" or empty list) rather than crashing.
