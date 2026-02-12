@@ -119,6 +119,8 @@ def grab_all_wireless_interfaces() -> dict | None:
                 }
                 log.info(f"Relevant device info: {relevant_device_info}")
 
+        return relevant_device_info
+
 def grab_all_bluetooth_interfaces() -> dict:
     """
     Grabs all bluetooth interfaces, pulls relevant info for them like state and capabilities.
@@ -148,6 +150,8 @@ def grab_all_bluetooth_interfaces() -> dict:
                         accumulate_repeated_keys=True,
                     )
                     log.debug(bluetooth_controller_info)
+                    relevant_device_info[segment] = bluetooth_controller_info
+                    break
 
     return relevant_device_info
 
