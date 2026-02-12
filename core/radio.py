@@ -5,7 +5,7 @@ from rich.traceback import install
 from rich import pretty
 from rich import print
 
-from utils import parse_indented_output
+from core.utils import parse_indented_output
 
 log = logging.getLogger(__name__)
 
@@ -51,7 +51,7 @@ def grab_all_wireless_interfaces() -> dict | None:
     log.info("Querying all wireless interfaces")
     try:
         result = subprocess.run(['iw', 'dev'], capture_output=True, text=True)
-    except subprocess.CalledProcessError as e:
+    except OSError as e:
         log.error(f"Failed to list wireless interfaces: {e}")
         return relevant_device_info
 
@@ -130,7 +130,7 @@ def grab_all_bluetooth_interfaces() -> dict:
 
     try:
         result = subprocess.run(['bluetoothctl', 'list'], capture_output=True, text=True)
-    except subprocess.CalledProcessError as e:
+    except OSError as e:
         log.error(f"Failed to list bluetooth controllers: {e}")
         return relevant_device_info
 

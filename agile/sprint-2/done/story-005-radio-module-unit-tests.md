@@ -18,11 +18,11 @@ The PoC requires unit tests for logic that does not need hardware—e.g. radio d
 
 ## Acceptance criteria
 
-- [ ] There is a test file that imports and tests `core.radio` (or the radio module).
-- [ ] WiFi path: at least one test provides fake/mocked output from a WiFi detection command and asserts the returned structure (e.g. interface name, monitor_capable, bands) is correct.
-- [ ] BT path: at least one test provides fake/mocked Bluetooth output and asserts the returned status is correct.
-- [ ] At least one test covers "tools missing or error" and asserts no unhandled exception and a safe return value.
-- [ ] `poetry run pytest` passes including these tests.
+- [x] There is a test file that imports and tests `core.radio` (or the radio module).
+- [x] WiFi path: at least one test provides fake/mocked output from a WiFi detection command and asserts the returned structure (e.g. interface name, monitor_capable, bands) is correct.
+- [x] BT path: at least one test provides fake/mocked Bluetooth output and asserts the returned status is correct.
+- [x] At least one test covers "tools missing or error" and asserts no unhandled exception and a safe return value.
+- [x] `poetry run pytest` passes including these tests.
 
 ## Definition of done
 
