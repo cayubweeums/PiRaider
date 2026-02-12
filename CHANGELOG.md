@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/cayubweeums/PiRaider/compare/v1.4.0...v1.5.0) (2026-02-12)
+
+
+### Features
+
+* adds error testing for radios ([4eadd36](https://github.com/cayubweeums/PiRaider/commit/4eadd36bc27759f5955996aa93b21755cb948be8))
+
 # [1.4.0](https://github.com/cayubweeums/PiRaider/compare/v1.3.0...v1.4.0) (2026-02-12)
 
 
