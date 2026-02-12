@@ -1,4 +1,4 @@
-# [STORY-007] TUI home screen
+# [STORY-008] TUI home screen
 
 ## Summary
 

@@ -2,6 +2,14 @@ import asyncio
 
 import flet as ft
 
+from .pages.home import home_page
+from .pages.wifi import wifi_page
+from .pages.bluetooth import bluetooth_page
+from .pages.devices import devices_page
+
+'''
+# Flet main entrypoint
+'''
 def flet_main(web: bool = False):
     if not web:
         ft.run(main)
@@ -16,30 +24,28 @@ def main(page: ft.Page):
         page.views.append(
             ft.View(
                 route="/",
-                controls=[
-                    ft.AppBar(
-                        title=ft.Text("The App"), bgcolor=ft.Colors.SURFACE_BRIGHT
-                    ),
-                    ft.Button(
-                        "Visit Store",
-                        on_click=lambda: asyncio.create_task(page.push_route("/store")),
-                    ),
-                ],
+                controls=home_page(page),
             )
         )
-        if page.route == "/store":
+        if page.route == "/wifi":
             page.views.append(
                 ft.View(
-                    route="/store",
-                    controls=[
-                        ft.AppBar(
-                            title=ft.Text("Store"), bgcolor=ft.Colors.SURFACE_BRIGHT
-                        ),
-                        ft.Button(
-                            "Go Home",
-                            on_click=lambda: asyncio.create_task(page.push_route("/")),
-                        ),
-                    ],
+                    route="/wifi",
+                    controls=wifi_page(page)
+                )
+            )
+        if page.route == "/bluetooth":
+            page.views.append(
+                ft.View(
+                    route="/bluetooth",
+                    controls=bluetooth_page(page)
+                )
+            )
+        if page.route == "/devices":
+            page.views.append(
+                ft.View(
+                    route="/devices",
+                    controls=devices_page(page)
                 )
             )
         page.update()
