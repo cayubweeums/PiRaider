@@ -1,3 +1,12 @@
+# [1.4.0](https://github.com/cayubweeums/PiRaider/compare/v1.3.0...v1.4.0) (2026-02-12)
+
+
+### Features
+
+* adds ability to query and aggregate all wireless interface info ([7e4a82e](https://github.com/cayubweeums/PiRaider/commit/7e4a82ea1ba4be0546e0a5d4e2c4a19217e03972))
+* adds bluetooth device detection and parsing tests ([2bddda4](https://github.com/cayubweeums/PiRaider/commit/2bddda433d0a14072ea8a1df7bea87e5d2f5c359))
+* expands docstrings for radio and utils ([ab4276d](https://github.com/cayubweeums/PiRaider/commit/ab4276d27fb1dbdfd1896a98b3ae4052d21dcbdd))
+
 # [1.3.0](https://github.com/cayubweeums/PiRaider/compare/v1.2.0...v1.3.0) (2026-02-11)
 
 
