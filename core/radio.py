@@ -111,4 +111,31 @@ def grab_all_wireless_interfaces() -> dict:
             }
             log.info(f"Relevant device info: {relevant_device_info}")
 
+def grab_all_bluetooth_interfaces() -> dict:
+    """
+    Grabs all bluetooth interfaces, pulls relevant info for them like state and capabilities
+    
+    Returns:
+        dict: A dictionary of all bluetooth interfaces and their relevant info
+    """
+    relevant_device_info = {}
+    # Have to use the mac address to index the controllers via bluetoothctl show <mac_address>
+    result = subprocess.run(['bluetoothctl', 'list'], capture_output=True, text=True)
+    if result.returncode != 0:
+        log.error(f"Failed to list bluetooth controllers: {result.stderr}")
+        return relevant_device_info
+    else:
+        for controller in result.stdout.split('\n'):
+            for segment in controller.split(' '):
+                if ':' in segment:
+                    log.info(f"Found bluetooth controller: {controller}")
+
+                    bluetooth_controller_info = parse_indented_output(
+                        subprocess.run(['bluetoothctl', 'show', segment], capture_output=True, text=True).stdout,
+                        accumulate_repeated_keys=True,
+                    )
+                    log.debug(bluetooth_controller_info)
+
+    return relevant_device_info
+
 #endregion
