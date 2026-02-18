@@ -1,3 +1,14 @@
+# [1.6.0](https://github.com/cayubweeums/PiRaider/compare/v1.5.0...v1.6.0) (2026-02-18)
+
+
+### Features
+
+* adds basic flet home screen with routing ([be55e00](https://github.com/cayubweeums/PiRaider/commit/be55e00bbf5ce358da10731fa707b356a7899c6f))
+* adds test for success case when pulling radio capabilities ([d98db4c](https://github.com/cayubweeums/PiRaider/commit/d98db4c7864e2ec931b9d7b1ef369c080390f633))
+* adds tests for empty stdout when looking for wireless and bluetooth controllers ([5c1ce20](https://github.com/cayubweeums/PiRaider/commit/5c1ce206ceb3266759a88058b89c22c1c6fc9541))
+* adds the ability to view wifi interfaces and their capabilities ([d2e7a23](https://github.com/cayubweeums/PiRaider/commit/d2e7a23b22ff334570ee9a8dc94d255f153f5dda))
+* adds visible list of bluetooth devices with some capabilities ([146413f](https://github.com/cayubweeums/PiRaider/commit/146413f2cd7dd58fadef11cd26ddbed6e24b866b))
+
 # [1.5.0](https://github.com/cayubweeums/PiRaider/compare/v1.4.0...v1.5.0) (2026-02-12)
 
 
