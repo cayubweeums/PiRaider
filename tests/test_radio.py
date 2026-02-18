@@ -25,6 +25,14 @@ def test_wireless_tools_return_nonzero_returns_empty_dict():
     assert result == {}
 
 
+def test_wireless_empty_listing_returns_empty_dict_no_crash():
+    """When iw dev returns empty or no interfaces, no crash and returns empty dict."""
+    iw_dev_empty = MagicMock(returncode=0, stderr="", stdout="")
+    with patch("core.radio.subprocess.run", return_value=iw_dev_empty):
+        result = grab_all_wireless_interfaces()
+    assert result == {}
+
+
 def test_bluetooth_tools_missing_or_error_returns_empty_dict():
     """When bluetoothctl is missing or fails, no exception and returns empty dict."""
     with patch("core.radio.subprocess.run") as mock_run:
@@ -40,6 +48,14 @@ def test_bluetooth_tools_return_nonzero_returns_empty_dict():
     mock_proc.stderr = "Failed to connect"
     mock_proc.stdout = ""
     with patch("core.radio.subprocess.run", return_value=mock_proc):
+        result = grab_all_bluetooth_interfaces()
+    assert result == {}
+
+
+def test_bluetooth_empty_listing_returns_empty_dict_no_crash():
+    """When bluetoothctl list returns empty or no controllers, no crash and returns empty dict."""
+    list_empty = MagicMock(returncode=0, stderr="", stdout="")
+    with patch("core.radio.subprocess.run", return_value=list_empty):
         result = grab_all_bluetooth_interfaces()
     assert result == {}
 
