@@ -6,6 +6,7 @@ from .pages.home import home_page
 from .pages.wifi import wifi_page
 from .pages.bluetooth import bluetooth_page
 from .pages.devices import devices_page
+from .pages.settings_wifi import settings_wifi_page
 
 '''
 # Flet main entrypoint
@@ -46,6 +47,13 @@ def main(page: ft.Page):
                 ft.View(
                     route="/devices",
                     controls=devices_page(page)
+                )
+            )
+        if page.route == "/settings_wifi":
+            page.views.append(
+                ft.View(
+                    route="/settings_wifi",
+                    controls=settings_wifi_page(page)
                 )
             )
         page.update()

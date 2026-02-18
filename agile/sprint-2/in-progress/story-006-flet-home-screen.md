@@ -27,9 +27,9 @@ If core does not yet return `monitor_supported` for WiFi, add it as a small exte
 ## Acceptance criteria
 
 - [x] Running `poetry run python main.py` opens the Flet app with a home screen.
-- [ ] The home screen shows three top-level buckets: WiFi, Bluetooth, Device (placeholders; no full submenus).
-- [ ] The home screen shows radio status: "radios ready" or "not available", derived from `core.radio` at load time.
-- [ ] The home screen shows a **list of WiFi interfaces** from `grab_all_wireless_interfaces()` with: interface ID, up/down state, band capability, monitor support.
+- [x] The home screen shows three top-level buckets: WiFi, Bluetooth, Device (placeholders; no full submenus).
+- [x] The home screen shows radio status: "radios ready" or "not available", derived from `core.radio` at load time.
+- [x] The home screen shows a **list of WiFi interfaces** from `grab_all_wireless_interfaces()` with: interface ID, up/down state, band capability, monitor support.
 - [ ] The home screen shows a **list of Bluetooth controllers** from `grab_all_bluetooth_interfaces()` with: controller ID and relevant capabilities (e.g. Powered, Discoverable).
 - [ ] No crash if radio module returns empty or error; show "not available" or empty list.
 - [ ] No new dependencies beyond those already in the project.

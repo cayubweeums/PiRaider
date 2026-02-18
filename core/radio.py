@@ -77,8 +77,10 @@ def grab_all_wireless_interfaces() -> dict | None:
             for physical_id in phy_info:
                 
                 # Check if monitor mode is supported
+                monitor_mode_supported = False
                 if 'monitor' in phy_info[physical_id]['Supported interface modes']['_items']:
                     log.info(f"Monitor mode supported: {interface['device_id']}")
+                    monitor_mode_supported = True
 
                 # Grab all supported frequencies via their bands
                 supported_frequencies = {}
@@ -115,6 +117,7 @@ def grab_all_wireless_interfaces() -> dict | None:
                     'physical_id': interface['physical_id'],
                     'device_id': interface['device_id'],
                     'interface_up': interface_up,
+                    'monitor_mode_supported': monitor_mode_supported,
                     'band_capability': supported_frequencies
                 }
                 log.info(f"Relevant device info: {relevant_device_info}")
