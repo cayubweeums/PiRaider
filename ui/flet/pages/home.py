@@ -83,5 +83,5 @@ def _get_radio_status(page: ft.Page):
 
     return [
         _radio_icon(ft.Icons.WIFI_FIND_OUTLINED, not wifi_available, 3.0, lambda: asyncio.create_task(page.push_route("/settings_wifi"))),
-        _radio_icon(ft.Icons.BLUETOOTH_SEARCHING_OUTLINED, not bt_available, 2.5),
+        _radio_icon(ft.Icons.BLUETOOTH_SEARCHING_OUTLINED, not bt_available, 2.5, lambda: asyncio.create_task(page.push_route("/settings_bluetooth"))),
     ]

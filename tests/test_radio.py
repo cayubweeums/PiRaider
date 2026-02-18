@@ -68,6 +68,7 @@ def test_wireless_success_returns_expected_interface_data():
             "physical_id": "phy0",
             "device_id": "wlan0",
             "interface_up": True,
+            "monitor_mode_supported": True,
             "band_capability": {
                 "Band 1": "2.4",
                 "Band 2": "5",
@@ -85,9 +86,13 @@ def test_bluetooth_success_returns_expected_controller_data():
     )
     show_proc = MagicMock(returncode=0, stderr="", stdout="ignored by patched parser")
     parsed_bt = {
-        "Controller": "4C:49:6C:9D:4D:14 cayub-gamin [default]",
+        "Controller": "4C:49:6C:9D:4D:14 (public)",
         "Name": "cayub-gamin",
         "Powered": "yes",
+        "Discoverable": "no",
+        "Pairable": "yes",
+        "Discovering": "yes",
+        "Roles": "peripheral",
     }
 
     with patch("core.radio.subprocess.run", side_effect=[list_proc, show_proc]), patch(
@@ -96,5 +101,13 @@ def test_bluetooth_success_returns_expected_controller_data():
         result = grab_all_bluetooth_interfaces()
 
     assert result == {
-        "4C:49:6C:9D:4D:14": parsed_bt,
+        "4C:49:6C:9D:4D:14": {
+            "controller_mac": "4C:49:6C:9D:4D:14",
+            "controller_name": "cayub-gamin",
+            "powered": "yes",
+            "discoverable": "no",
+            "pairable": "yes",
+            "discovering": "yes",
+            "roles": "peripheral",
+        },
     }

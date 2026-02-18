@@ -33,6 +33,14 @@ def band_from_mhz(mhz: float) -> str | None:
             return label
     return None
 
+def _bluetoothctl_controller_block(stdout: str) -> str:
+    """Return bluetoothctl stdout from the first 'Controller ' line to the end (drops preamble)."""
+    lines = stdout.split("\n")
+    for i, line in enumerate(lines):
+        if line.strip().startswith("Controller "):
+            return "\n".join(lines[i:])
+    return ""
+
 #endregion
 
 #region Radio functs
@@ -124,6 +132,7 @@ def grab_all_wireless_interfaces() -> dict | None:
 
         return relevant_device_info
 
+
 def grab_all_bluetooth_interfaces() -> dict:
     """
     Grabs all bluetooth interfaces, pulls relevant info for them like state and capabilities.
@@ -134,7 +143,13 @@ def grab_all_bluetooth_interfaces() -> dict:
     relevant_device_info = {}
 
     try:
-        result = subprocess.run(['bluetoothctl', 'list'], capture_output=True, text=True)
+        result = subprocess.run(
+            ["bluetoothctl"],
+            input="list\nquit\n",
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
     except OSError as e:
         log.error(f"Failed to list bluetooth controllers: {e}")
         return relevant_device_info
@@ -143,18 +158,48 @@ def grab_all_bluetooth_interfaces() -> dict:
         log.error(f"Failed to list bluetooth controllers: {result.stderr}")
         return relevant_device_info
     else:
-        for controller in result.stdout.split('\n'):
-            for segment in controller.split(' '):
-                if ':' in segment:
-                    log.info(f"Found bluetooth controller: {controller}")
+        # Matches "Controller <MAC> <name...>" and captures MAC (group 1) and name (group 2)
+        CONTROLLER_LINE = re.compile(
+            r"Controller\s+([0-9A-Fa-f]{2}(?::[0-9A-Fa-f]{2}){5})\s+(.+)"
+        )
 
-                    bluetooth_controller_info = parse_indented_output(
-                        subprocess.run(['bluetoothctl', 'show', segment], capture_output=True, text=True).stdout,
-                        accumulate_repeated_keys=True,
-                    )
-                    log.debug(bluetooth_controller_info)
-                    relevant_device_info[segment] = bluetooth_controller_info
-                    break
+        for controller in result.stdout.split('\n'):
+            m = CONTROLLER_LINE.match(controller.strip())
+            if m:
+                log.debug(f"Found bluetooth controller: {m.group(1)} - {m.group(2)}")
+                bluetooth_controller_capabilities = _bluetoothctl_controller_block(
+                    subprocess.run(
+                        ["bluetoothctl"],
+                        input=f"show {m.group(1)}",
+                        capture_output=True,
+                        text=True,
+                        timeout=15,
+                    ).stdout
+                )
+                bluetooth_controller_capabilities = parse_indented_output(bluetooth_controller_capabilities.split('[bluetoothctl]')[0].strip())
+                relevant_device_info[m.group(1)] = {
+                    'controller_mac': m.group(1),
+                    'controller_name': bluetooth_controller_capabilities['Name'],
+                    'powered': bluetooth_controller_capabilities['Powered'],
+                    'discoverable': bluetooth_controller_capabilities['Discoverable'],
+                    'pairable': bluetooth_controller_capabilities['Pairable'],
+                    'discovering': bluetooth_controller_capabilities['Discovering'],
+                    'roles': bluetooth_controller_capabilities['Roles']
+                }
+                log.info(f"Relevant bluetooth controller info: {relevant_device_info[m.group(1)]}")
+
+
+            # for segment in controller.split(' '):
+            #     if ':' in segment:
+            #         log.info(f"Found bluetooth controller: {controller}")
+
+            #         bluetooth_controller_info = parse_indented_output(
+            #             subprocess.run(['bluetoothctl', 'show', segment], capture_output=True, text=True).stdout,
+            #             accumulate_repeated_keys=True,
+            #         )
+            #         log.debug(bluetooth_controller_info)
+            #         relevant_device_info[segment] = bluetooth_controller_info
+            #         break
 
     return relevant_device_info
 
