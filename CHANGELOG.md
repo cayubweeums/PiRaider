@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/cayubweeums/PiRaider/compare/v1.6.0...v1.7.0) (2026-02-19)
+
+
+### Features
+
+* implements a config file ([169718c](https://github.com/cayubweeums/PiRaider/commit/169718cad6d55e95df1d21fca74f127d40c4cd3e))
+
 # [1.6.0](https://github.com/cayubweeums/PiRaider/compare/v1.5.0...v1.6.0) (2026-02-18)
 
 
