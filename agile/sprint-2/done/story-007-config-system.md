@@ -47,14 +47,14 @@ User preferences (e.g. selected WiFi/BT devices) must persist between runs. This
 
 ## Acceptance criteria
 
-- [ ] `core/config.py` provides `load_config() -> dict` and `save_config(config: dict) -> None`.
-- [ ] Config path follows XDG: `$XDG_CONFIG_HOME/piraider/config.json` or `~/.config/piraider/config.json`.
-- [ ] Missing config file returns `{}`.
-- [ ] Invalid JSON returns `{}` (no crash).
-- [ ] Save uses atomic write (temp file + rename).
-- [ ] Parent dirs created on first save if missing.
-- [ ] No new dependencies; stdlib only.
-- [ ] Unit tests cover load (missing, invalid, valid) and save (creates file, atomic).
+- [x] `core/config.py` provides `load_config() -> dict` and `save_config(config: dict) -> None`.
+- [x] Config path follows XDG: `$XDG_CONFIG_HOME/piraider/config.json` or `~/.config/piraider/config.json`.
+- [x] Missing config file returns `{}`.
+- [x] Invalid JSON returns `{}` (no crash).
+- [x] Save uses atomic write (temp file + rename).
+- [x] Parent dirs created on first save if missing.
+- [x] No new dependencies; stdlib only.
+- [x] Unit tests cover load (missing, invalid, valid) and save (creates file, atomic).
 
 ## Definition of done
 

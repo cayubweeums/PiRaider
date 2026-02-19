@@ -44,7 +44,7 @@ def home_page(page: ft.Page):
             ],
             spacing=50,
             alignment=ft.MainAxisAlignment.CENTER,
-        ),
+        )
     ]
 
 # TODO Improve this once we have implemented a config. If there is no prior set devices, then this should reflect the status of the 
