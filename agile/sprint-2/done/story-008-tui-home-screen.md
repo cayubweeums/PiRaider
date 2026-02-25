@@ -18,11 +18,11 @@ The PoC requires both UIs to show a simple home screen with the same top-level b
 
 ## Acceptance criteria
 
-- [ ] Running `poetry run python main.py --tui` opens the TUI and shows the home screen.
-- [ ] The home screen shows three top-level buckets: WiFi, Bluetooth, Device (placeholders).
-- [ ] The home screen shows radio status: "radios ready" or "not available", derived from `core.radio`.
-- [ ] No crash if radio module returns empty or error; show "not available".
-- [ ] No new dependencies; use Rich only.
+- [x] Running `poetry run python main.py --tui` opens the TUI and shows the home screen.
+- [x] The home screen shows three top-level buckets: WiFi, Bluetooth, Device (placeholders).
+- [x] The home screen shows radio status: "radios ready" or "not available", derived from `core.radio`.
+- [x] No crash if radio module returns empty or error; show "not available".
+- [x] No new dependencies; use Rich only.
 
 ## Definition of done
 

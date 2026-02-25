@@ -65,6 +65,13 @@ def get_key(key: str, default: Any = None) -> Any:
     config = load_config()
     return config.get(key, default)
 
+
+def has_key(key: str) -> bool:
+    """
+    Return True if the key exists in the config, False otherwise.
+    """
+    return key in load_config()
+
 def set_key(key: str, value: Any) -> None:
     """
     Set a key in the config.
