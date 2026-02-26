@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/cayubweeums/PiRaider/compare/v1.7.0...v1.8.0) (2026-02-26)
+
+
+### Features
+
+* adds tui wifi and bluetooth settings pages ([4b8e3be](https://github.com/cayubweeums/PiRaider/commit/4b8e3beb8cedaf19dd4897c1631104b4e220a026))
+
 # [1.7.0](https://github.com/cayubweeums/PiRaider/compare/v1.6.0...v1.7.0) (2026-02-19)
 
 
