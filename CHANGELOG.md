@@ -1,3 +1,12 @@
+# [1.9.0](https://github.com/cayubweeums/PiRaider/compare/v1.8.0...v1.9.0) (2026-02-26)
+
+
+### Features
+
+* adds ability to select wifi interface ([75a3d82](https://github.com/cayubweeums/PiRaider/commit/75a3d82e789b3031840fc12d8cb569490a6ea9b3))
+* adds the ability to save bluetooth controller via the tui ([929857b](https://github.com/cayubweeums/PiRaider/commit/929857b9d58e27e9df302a255ae64401e971d577))
+* adds the ability to see radio status being set or not in home page in flet, adds ability to set preferred radio and save to config in flet ([34819e9](https://github.com/cayubweeums/PiRaider/commit/34819e940b51e511d5762656d68399f8ba1a6c33))
+
 # [1.8.0](https://github.com/cayubweeums/PiRaider/compare/v1.7.0...v1.8.0) (2026-02-26)
 
 
