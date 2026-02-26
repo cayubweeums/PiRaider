@@ -3,6 +3,7 @@ from typing import Callable
 
 import flet as ft
 
+from core.config import get_key
 from core.radio import grab_all_bluetooth_interfaces, grab_all_wireless_interfaces
 
 button_icon_size = 180
@@ -47,17 +48,25 @@ def home_page(page: ft.Page):
         )
     ]
 
-# TODO Improve this once we have implemented a config. If there is no prior set devices, then this should reflect the status of the 
-    # current scan for devices and acquiring device capabilities process. Once that process is complete, it should show solid amber instead of flashing.
-    # If there is a config set, then it should flash green until it configures the devices as needed and initializes them. After which the status 
-    # should be solid green.
+def _device_set_in_config(key: str) -> bool:
+    """True if key exists in config and has a non-empty value."""
+    value = get_key(key) or ""
+    return bool(str(value).strip())
+
+
 def _get_radio_status(page: ft.Page):
-    icon_color = ft.Colors.AMBER_600
-    wifi_available = True if grab_all_wireless_interfaces() is not None else False
-    bt_available = True if grab_all_bluetooth_interfaces() is not None else False
+    wifi_set = _device_set_in_config("wifi_device")
+    bt_set = _device_set_in_config("bluetooth_device")
+    wifi_icon = ft.Icons.WIFI if wifi_set else ft.Icons.WIFI_FIND_OUTLINED
+    wifi_color = ft.Colors.GREEN if wifi_set else ft.Colors.AMBER_600
+    bt_icon = ft.Icons.BLUETOOTH_CONNECTED_SHARP if bt_set else ft.Icons.BLUETOOTH_SEARCHING_OUTLINED
+    bt_color = ft.Colors.GREEN if bt_set else ft.Colors.AMBER_600
+    wifi_available = True if grab_all_wireless_interfaces() else False
+    bt_available = True if grab_all_bluetooth_interfaces() else False
 
     def _radio_icon(
         icon: str,
+        icon_color: str,
         should_animate: bool,
         duration: float,
         on_click: Callable[..., None] | None = None,
@@ -82,6 +91,6 @@ def _get_radio_status(page: ft.Page):
         return c
 
     return [
-        _radio_icon(ft.Icons.WIFI_FIND_OUTLINED, not wifi_available, 3.0, lambda: asyncio.create_task(page.push_route("/settings_wifi"))),
-        _radio_icon(ft.Icons.BLUETOOTH_SEARCHING_OUTLINED, not bt_available, 2.5, lambda: asyncio.create_task(page.push_route("/settings_bluetooth"))),
+        _radio_icon(wifi_icon, wifi_color, not wifi_available, 3.0, lambda: asyncio.create_task(page.push_route("/settings_wifi"))),
+        _radio_icon(bt_icon, bt_color, not bt_available, 2.5, lambda: asyncio.create_task(page.push_route("/settings_bluetooth"))),
     ]
