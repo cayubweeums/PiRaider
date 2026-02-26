@@ -1,51 +1,53 @@
-Stopwatch {   
-    background: $boost;
-    height: 5;
-    margin: 1;
-    min-width: 50;
+/* PiRaider TUI: bucket row fills width and scales equally */
+
+CustomHeader {
+    width: 100%;
+    height: auto;
+    min-height: 1;
+    padding: 0;
+    margin: 0;
+    align-horizontal: right;
+}
+
+CustomHeader RadioButton {
+    background: transparent;
+    border: none;
+    padding: 0 1;
+    margin: 0;
+}
+
+CustomHeader RadioButton > .toggle--button {
+    background: transparent;
+    border: none;
+}
+
+CustomHeader RadioButton.-on > .toggle--button {
+    background: transparent;
+    border: none;
+}
+
+BucketsGroup {
+    layout: grid;
+    grid-size: 3 1;
+    grid-columns: 1fr 1fr 1fr;
+    grid-gutter: 1;
+    width: 100%;
+    height: auto;
     padding: 1;
+    margin: 0;
 }
 
-TimeDisplay {   
-    text-align: center;
-    color: $foreground-muted;
-    height: 3;
+BucketsGroup Button {
+    width: 100%;
+    min-width: 0;
 }
 
-Button {
-    width: 16;
+#wifi_config_actions {
+    width: 100%;
+    align-horizontal: right;
 }
 
-#start {
-    dock: left;
-}
-
-#stop {
-    dock: left;
-    display: none;
-}
-
-#reset {
-    dock: right;
-}
-
-.started {
-    background: $success-muted;
-    color: $text;
-}
-
-.started TimeDisplay {
-    color: $foreground;
-}
-
-.started #start {
-    display: none
-}
-
-.started #stop {
-    display: block
-}
-
-.started #reset {
-    visibility: hidden
+#bluetooth_config_actions {
+    width: 100%;
+    align-horizontal: right;
 }
