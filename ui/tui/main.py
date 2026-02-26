@@ -1,5 +1,5 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Button, RadioButton
+from textual.widgets import Footer, Button
 from textual.containers import HorizontalGroup
 
 from core.config import has_key
@@ -36,21 +36,21 @@ class PiRaiderApp(App):
         self.refresh_header_from_config()
 
     def refresh_header_from_config(self) -> None:
-        """Set header radio button values from config key existence only."""
+        """Update header button labels from config (set vs not set)."""
         try:
             header = self.query_one(CustomHeader)
-            header.query_one("#wifi_status", RadioButton).value = has_key("wifi_device")
-            header.query_one("#bluetooth_status", RadioButton).value = has_key(
-                "bluetooth_device"
-            )
+            w = header.query_one("#wifi_status", Button)
+            b = header.query_one("#bluetooth_status", Button)
+            w.label = "WiFi ●" if has_key("wifi_device") else "WiFi ○"
+            b.label = "Bluetooth ●" if has_key("bluetooth_device") else "Bluetooth ○"
         except Exception:
             pass
 
-    def on_radio_button_changed(self, event: RadioButton.Changed) -> None:
-        """Navigate to WiFi screen when the user taps the WiFi status in the header."""
-        if event.radio_button.id == "wifi_status":
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Navigate to config screen when header WiFi/Bluetooth is clicked."""
+        if event.button.id == "wifi_status":
             self.push_screen(WifiConfigScreen())
-        if event.radio_button.id == "bluetooth_status":
+        elif event.button.id == "bluetooth_status":
             self.push_screen(BluetoothConfigScreen())
 
     def action_toggle_dark(self) -> None:

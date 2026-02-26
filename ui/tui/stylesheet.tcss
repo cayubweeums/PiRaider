@@ -9,21 +9,11 @@ CustomHeader {
     align-horizontal: right;
 }
 
-CustomHeader RadioButton {
+CustomHeader Button {
     background: transparent;
     border: none;
     padding: 0 1;
     margin: 0;
-}
-
-CustomHeader RadioButton > .toggle--button {
-    background: transparent;
-    border: none;
-}
-
-CustomHeader RadioButton.-on > .toggle--button {
-    background: transparent;
-    border: none;
 }
 
 BucketsGroup {

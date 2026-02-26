@@ -3,11 +3,9 @@ import asyncio
 import flet as ft
 
 from .pages.home import home_page
-from .pages.wifi import wifi_page
-from .pages.bluetooth import bluetooth_page
 from .pages.devices import devices_page
-from .pages.settings_wifi import settings_wifi_page
-from .pages.settings_bluetooth import settings_bluetooth_page
+from .pages.settings_wifi import Wifi_Settings_Content
+from .pages.settings_bluetooth import Bluetooth_Settings_Content
 
 '''
 # Flet main entrypoint
@@ -33,14 +31,14 @@ def main(page: ft.Page):
             page.views.append(
                 ft.View(
                     route="/wifi",
-                    controls=wifi_page(page)
+                    controls=Wifi_Settings_Content(page).get_content()
                 )
             )
         if page.route == "/bluetooth":
             page.views.append(
                 ft.View(
                     route="/bluetooth",
-                    controls=bluetooth_page(page)
+                    controls=Bluetooth_Settings_Content(page).get_content()
                 )
             )
         if page.route == "/devices":
@@ -54,14 +52,14 @@ def main(page: ft.Page):
             page.views.append(
                 ft.View(
                     route="/settings_wifi",
-                    controls=settings_wifi_page(page)
+                    controls=Wifi_Settings_Content(page).get_content()
                 )
             )
         if page.route == "/settings_bluetooth":
             page.views.append(
                 ft.View(
                     route="/settings_bluetooth",
-                    controls=settings_bluetooth_page(page)
+                    controls=Bluetooth_Settings_Content(page).get_content()
                 )
             )
         page.update()

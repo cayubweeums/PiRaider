@@ -1,12 +1,12 @@
 from textual.app import ComposeResult
 from textual.containers import Horizontal
-from textual.widgets import RadioButton
+from textual.widgets import Button
 
 
 class CustomHeader(Horizontal):
-    """Header showing WiFi/Bluetooth status (display-only, set programmatically)."""
+    """Header showing WiFi/Bluetooth status; click opens the config screen."""
 
     def compose(self) -> ComposeResult:
-        """Create child widgets of a custom header (values set from config by app)."""
-        yield RadioButton("WiFi", id="wifi_status", value=False)
-        yield RadioButton("Bluetooth", id="bluetooth_status", value=False)
+        """Create child widgets (labels updated from config by app)."""
+        yield Button("WiFi", id="wifi_status", variant="default")
+        yield Button("Bluetooth", id="bluetooth_status", variant="default")
