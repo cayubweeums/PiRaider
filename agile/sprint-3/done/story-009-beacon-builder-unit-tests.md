@@ -18,13 +18,13 @@ The PoC requires that every new tool adds tests. The beacon builder (story 008) 
 
 ## Acceptance criteria
 
-- [ ] There is a test file that imports and tests the beacon builder from core.
-- [ ] At least one test asserts the built frame contains the given SSID in the SSID IE.
-- [ ] At least one test asserts BSSID/SA are present and consistent (e.g. SA = BSSID when random).
-- [ ] At least one test asserts DA is broadcast (0xff:ff:ff:ff:ff:ff).
-- [ ] At least one test asserts frame type is beacon (FC bytes).
-- [ ] Edge cases: empty SSID and/or long SSID covered as per implementation.
-- [ ] `poetry run pytest` passes.
+- [x] There is a test file that imports and tests the beacon builder from core.
+- [x] At least one test asserts the built frame contains the given SSID in the SSID IE.
+- [x] At least one test asserts BSSID/SA are present and consistent (e.g. SA = BSSID when random).
+- [x] At least one test asserts DA is broadcast (0xff:ff:ff:ff:ff:ff).
+- [x] At least one test asserts frame type is beacon (FC bytes).
+- [x] Edge cases: empty SSID and/or long SSID covered as per implementation.
+- [x] `poetry run pytest` passes.
 
 ## Definition of done
 
