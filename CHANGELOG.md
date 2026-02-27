@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/cayubweeums/PiRaider/compare/v1.9.0...v1.10.0) (2026-02-27)
+
+
+### Features
+
+* adds beacon frame builder func in core ([6936e47](https://github.com/cayubweeums/PiRaider/commit/6936e47bbd1d686edcaa0497d0314a701842ce0b))
+
 # [1.9.0](https://github.com/cayubweeums/PiRaider/compare/v1.8.0...v1.9.0) (2026-02-26)
 
 
