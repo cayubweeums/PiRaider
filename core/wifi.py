@@ -1,10 +1,25 @@
 import os
+import time
+import logging
+from multiprocessing import Process
+from typing import Tuple
 
 import scapy.packet
+from scapy.all import ( Dot11,
+                        Dot11Beacon,
+                        Dot11Elt,
+                        RadioTap,
+                        sendp,
+                        hexdump)
 
 from core.beacon import build_beacon_frame
+from core.config import config
+from core.radio import configure_interface
 
+log = logging.getLogger(__name__)
 
+# TODO: Before running any prank or attack have a configure interface function that will use the logic in utils to ensure the 
+#   interface selected in the config is in monitor mode and on a specific channel
 
 #region Rick Roll Beacon
 """
@@ -47,5 +62,91 @@ def get_rick_roll_beacon_frames() -> list[scapy.packet.Packet]:
         A list of Beacon frames scapy packets.
     """
     return [build_beacon_frame(ssid=ssid) for ssid in rick_roll_ssids]
+
+def start_rick_roll_beacon() -> Process | None:
+    """
+    Start the Rick Roll Beacon Prank
+
+    Args:
+        None
+    
+    Returns:
+        A Process object if the process was started successfully, None otherwise
+    """
+    if config.get_key("running_processes", "rick_roll") is not None:
+        log.warning("Already a running Rick Roll Beacon cannot start another")
+        return None
+    process = Process(target=send_rick_roll_beacon)
+    process.start()
+    config.set_key("running_processes", "rick_roll", process.pid)
+    log.info(f"Started Rick Roll Beacon with process ID {process.pid}")
+    return process
+
+def send_rick_roll_beacon() -> None:
+    """
+    Send the Rick Roll Beacon Prank
+
+    ex python line: sendp(frame, iface=iface, inter=0.100, loop=10000)
+
+    """
+    
+    # Grab frames to send
+    frames = get_rick_roll_beacon_frames()
+
+    try:
+        iface = config.get_key("wifi_device")
+    except KeyError:
+        log.error("WiFi device not set in config, unable to start rick roll prank")
+        return
+
+    if not configure_interface(iface):
+        log.error(f"Failed to configure interface {iface}, unable to start rick roll prank")
+        return
+
+    while True:
+        for beacon in frames:
+            sendp(beacon, iface=iface)
+            time.sleep(0.400)
+
+def stop_rick_roll_beacon() -> bool:
+    """
+    Stop the Rick Roll Beacon Prank
+
+    Args:
+        None
+    
+    Returns:
+        True if the prank was stopped successfully, False otherwise
+    """
+    if config.get_key("running_processes", "rick_roll") is None:
+        log.warning("No running Rick Roll Beacon to stop")
+        return False
+    try:
+        process = config.get_key("running_processes", "rick_roll")
+        process.terminate()
+        config.set_key("running_processes", "rick_roll", None)
+        log.info(f"Stopped Rick Roll Beacon with process ID {process.pid}")
+        return True
+    except Exception as e:
+        log.error(f"Failed to stop Rick Roll Beacon: {e}")
+        return False
+
+def is_rick_roll_beacon_running() -> Tuple[bool, int | None]:
+    """
+    Check if the Rick Roll Beacon is running
+
+    Args:
+        None
+    
+    Returns:
+        A tuple of a boolean indicating if the Rick Roll Beacon is running and the process ID if it is running, None otherwise
+    """
+    running, pid = False, None
+    try:
+        pid = config.get_key("running_processes", "rick_roll")
+        running = pid is not None
+    except Exception as e:
+        log.error(f"Failed to get Rick Roll Beacon process: {e}")
+    return running, pid
 
 #endregion

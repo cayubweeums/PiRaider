@@ -12,7 +12,10 @@ log = logging.getLogger(__name__)
 Config file format:
 {
     "wifi_device": "wlan0",
-    "bluetooth_device": "XX:XX:XX:XX:XX:XX"
+    "bluetooth_device": "XX:XX:XX:XX:XX:XX",
+    "running_processes": {
+        "rick_roll": "9234678" # Process ID
+    }
 }
 
 File location:
@@ -76,6 +79,25 @@ def set_key(key: str, value: Any) -> None:
     """
     Set a key in the config.
     """
-    config = load_config()
-    config[key] = value
-    save_config(config)
+    data = load_config()
+    data[key] = value
+    save_config(data)
+
+
+class _ConfigNested:
+    """Nested config access: get_key(section, option), set_key(section, option, value)."""
+
+    def get_key(self, section: str, option: str) -> Any:
+        data = load_config()
+        return (data.get(section) or {}).get(option)
+
+    def set_key(self, section: str, option: str, value: Any) -> None:
+        data = load_config()
+        if section not in data:
+            data[section] = {}
+        data[section][option] = value
+        save_config(data)
+
+
+# For code that uses config.get_key("running_processes", "rick_roll") style nested access.
+config = _ConfigNested()
