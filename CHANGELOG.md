@@ -1,3 +1,11 @@
+# [1.12.0](https://github.com/cayubweeums/PiRaider/compare/v1.11.0...v1.12.0) (2026-03-04)
+
+
+### Features
+
+* adds rick roll prank start stop and status ([275f8b6](https://github.com/cayubweeums/PiRaider/commit/275f8b6947ccdc6bcf1ef680877a75cb44fc99fb))
+* adds tests ([bb1cd1b](https://github.com/cayubweeums/PiRaider/commit/bb1cd1b020f7983be83864b0278499defb2bef41))
+
 # [1.11.0](https://github.com/cayubweeums/PiRaider/compare/v1.10.0...v1.11.0) (2026-03-04)
 
 
