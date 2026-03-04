@@ -1,8 +1,8 @@
-from ast import Tuple
 import os
 import time
 import logging
 from multiprocessing import Process
+from typing import Tuple
 
 import scapy.packet
 from scapy.all import ( Dot11,
@@ -144,7 +144,7 @@ def is_rick_roll_beacon_running() -> Tuple[bool, int | None]:
     running, pid = False, None
     try:
         pid = config.get_key("running_processes", "rick_roll")
-        running = True
+        running = pid is not None
     except Exception as e:
         log.error(f"Failed to get Rick Roll Beacon process: {e}")
     return running, pid

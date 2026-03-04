@@ -1,4 +1,6 @@
-"""Tests for core.wifi Rick Roll Beacon: SSIDs and beacon frames."""
+"""Tests for core.wifi Rick Roll Beacon: SSIDs, beacon frames, and start/stop/status API."""
+
+from unittest.mock import MagicMock, patch
 
 import pytest
 import scapy.packet
@@ -8,6 +10,9 @@ from core.wifi import (
     rick_roll_ssids,
     get_rick_roll_ssids,
     get_rick_roll_beacon_frames,
+    is_rick_roll_beacon_running,
+    start_rick_roll_beacon,
+    stop_rick_roll_beacon,
 )
 
 EXPECTED_RICK_ROLL_SSIDS = [
@@ -101,3 +106,98 @@ def test_get_rick_roll_beacon_frames_structure():
         assert dot11.addr1.lower() == "ff:ff:ff:ff:ff:ff"
         # BSSID (addr2/addr3) is random per frame when not provided
         assert dot11.addr2 == dot11.addr3
+
+
+# --- is_rick_roll_beacon_running ---
+
+
+@patch("core.wifi.config")
+def test_is_rick_roll_beacon_running_no_process_returns_false_none(mock_config):
+    """When no process is stored in config, is_rick_roll_beacon_running returns (False, None)."""
+    mock_config.get_key.return_value = None
+    assert is_rick_roll_beacon_running() == (False, None)
+
+
+@patch("core.wifi.config")
+def test_is_rick_roll_beacon_running_stored_pid_returns_true_pid(mock_config):
+    """When a PID is stored in config, is_rick_roll_beacon_running returns (True, that pid)."""
+    mock_config.get_key.return_value = 12345
+    assert is_rick_roll_beacon_running() == (True, 12345)
+
+
+@patch("core.wifi.config")
+def test_is_rick_roll_beacon_running_config_raises_returns_false_none(mock_config):
+    """When config.get_key raises, is_rick_roll_beacon_running returns (False, None) and does not raise."""
+    mock_config.get_key.side_effect = RuntimeError("config error")
+    result = is_rick_roll_beacon_running()
+    assert result == (False, None)
+
+
+# --- start_rick_roll_beacon ---
+
+
+@patch("core.wifi.config")
+def test_start_rick_roll_beacon_already_running_returns_none(mock_config):
+    """When a process is already recorded, start_rick_roll_beacon returns None and does not start another."""
+    mock_config.get_key.return_value = 999
+    result = start_rick_roll_beacon()
+    assert result is None
+    mock_config.get_key.assert_called_once_with("running_processes", "rick_roll")
+    mock_config.set_key.assert_not_called()
+
+
+@patch("core.wifi.Process")
+@patch("core.wifi.config")
+def test_start_rick_roll_beacon_starts_and_stores_pid(mock_config, mock_process_cls):
+    """When no process is running, start_rick_roll_beacon starts a process and stores its PID in config."""
+    mock_config.get_key.return_value = None
+    mock_proc = MagicMock()
+    mock_proc.pid = 4242
+    mock_process_cls.return_value = mock_proc
+
+    result = start_rick_roll_beacon()
+
+    assert result is mock_proc
+    mock_process_cls.assert_called_once()
+    mock_proc.start.assert_called_once()
+    mock_config.set_key.assert_called_once_with("running_processes", "rick_roll", 4242)
+
+
+# --- stop_rick_roll_beacon ---
+
+
+@patch("core.wifi.config")
+def test_stop_rick_roll_beacon_not_running_returns_false(mock_config):
+    """When no process is recorded, stop_rick_roll_beacon returns False and does not call terminate."""
+    mock_config.get_key.return_value = None
+    result = stop_rick_roll_beacon()
+    assert result is False
+    mock_config.get_key.assert_called_once_with("running_processes", "rick_roll")
+    mock_config.set_key.assert_not_called()
+
+
+@patch("core.wifi.config")
+def test_stop_rick_roll_beacon_running_terminates_and_returns_true(mock_config):
+    """When a process is recorded, stop_rick_roll_beacon terminates it, clears config, and returns True."""
+    mock_proc = MagicMock()
+    mock_proc.pid = 4242
+    mock_config.get_key.return_value = mock_proc
+
+    result = stop_rick_roll_beacon()
+
+    assert result is True
+    mock_config.get_key.assert_called_with("running_processes", "rick_roll")
+    mock_proc.terminate.assert_called_once()
+    mock_config.set_key.assert_called_once_with("running_processes", "rick_roll", None)
+
+
+@patch("core.wifi.config")
+def test_stop_rick_roll_beacon_terminate_raises_returns_false(mock_config):
+    """When terminate or config update fails, stop_rick_roll_beacon returns False and does not raise."""
+    mock_proc = MagicMock()
+    mock_proc.terminate.side_effect = OSError("kill failed")
+    mock_config.get_key.return_value = mock_proc
+
+    result = stop_rick_roll_beacon()
+
+    assert result is False
