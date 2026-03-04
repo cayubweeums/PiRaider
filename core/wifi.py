@@ -1,4 +1,6 @@
 import os
+import signal
+import subprocess
 import time
 import logging
 from multiprocessing import Process
@@ -13,7 +15,7 @@ from scapy.all import ( Dot11,
                         hexdump)
 
 from core.beacon import build_beacon_frame
-from core.config import config
+from core.config import config, get_key
 from core.radio import configure_interface
 
 log = logging.getLogger(__name__)
@@ -93,9 +95,8 @@ def send_rick_roll_beacon() -> None:
     # Grab frames to send
     frames = get_rick_roll_beacon_frames()
 
-    try:
-        iface = config.get_key("wifi_device")
-    except KeyError:
+    iface = get_key("wifi_device")
+    if not iface:
         log.error("WiFi device not set in config, unable to start rick roll prank")
         return
 
@@ -106,7 +107,7 @@ def send_rick_roll_beacon() -> None:
     while True:
         for beacon in frames:
             sendp(beacon, iface=iface)
-            time.sleep(0.400)
+            time.sleep(0.045)
 
 def stop_rick_roll_beacon() -> bool:
     """
@@ -114,18 +115,28 @@ def stop_rick_roll_beacon() -> bool:
 
     Args:
         None
-    
+
     Returns:
         True if the prank was stopped successfully, False otherwise
     """
-    if config.get_key("running_processes", "rick_roll") is None:
+    pid = config.get_key("running_processes", "rick_roll")
+    if pid is None:
         log.warning("No running Rick Roll Beacon to stop")
         return False
     try:
-        process = config.get_key("running_processes", "rick_roll")
-        process.terminate()
+        # Config stores PID (int); terminate the process by PID
+        if isinstance(pid, int):
+            os.kill(pid, signal.SIGTERM)
+        else:
+            # Legacy: Process object
+            pid.terminate()
         config.set_key("running_processes", "rick_roll", None)
-        log.info(f"Stopped Rick Roll Beacon with process ID {process.pid}")
+        _pid = pid if isinstance(pid, int) else getattr(pid, "pid", None)
+        log.info(f"Stopped Rick Roll Beacon (PID {_pid})")
+        return True
+    except ProcessLookupError:
+        config.set_key("running_processes", "rick_roll", None)
+        log.info("Rick Roll Beacon process already exited")
         return True
     except Exception as e:
         log.error(f"Failed to stop Rick Roll Beacon: {e}")
