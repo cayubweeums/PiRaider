@@ -83,6 +83,20 @@ def test_build_beacon_frame_sa_and_bssid_equal_when_sender_mac_given():
     assert dot11.addr2.lower() == sender.lower()
 
 
+def test_build_beacon_frame_random_sender_mac_when_none():
+    """When sender_mac is None, a random MAC is used; SA and BSSID are equal and valid."""
+    pkt = build_beacon_frame(ssid="RickRoll")
+    dot11 = pkt[Dot11]
+    assert dot11.addr2 == dot11.addr3
+    # Format xx:xx:xx:xx:xx:xx (6 hex bytes)
+    mac = dot11.addr2
+    parts = mac.split(":")
+    assert len(parts) == 6
+    for p in parts:
+        assert len(p) == 2
+        int(p, 16)  # valid hex
+
+
 def test_build_beacon_frame_serializable_to_bytes():
     """Packet can be serialized to bytes (e.g. for injection); no UI or transmission."""
     pkt = build_beacon_frame(ssid="Serial", sender_mac="de:ad:be:ef:00:00")
