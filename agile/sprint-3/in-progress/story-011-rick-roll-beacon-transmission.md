@@ -18,9 +18,9 @@ The Rick Roll tool must actually transmit beacon frames so that devices nearby s
 
 ## Acceptance criteria
 
-- [ ] There is a core API to run the Rick Roll Beacon (e.g. `run_rick_roll(interface, duration_seconds)` or equivalent) that sends beacon frames built from the Rick Roll logic.
-- [ ] Frames are sent using the chosen method (subprocess or raw socket); method is documented.
-- [ ] If the interface is not available or not in monitor mode, the function exits or returns with a clear error (no silent failure).
+- [x] There is a core API to run the Rick Roll Beacon (e.g. `run_rick_roll(interface, duration_seconds)` or equivalent) that sends beacon frames built from the Rick Roll logic.
+- [x] Frames are sent using the chosen method (subprocess or raw socket); method is documented.
+- [x] If the interface is not available or not in monitor mode, the function exits or returns with a clear error (no silent failure).
 - [ ] Requirements (monitor mode, tool names, permissions) are documented (e.g. in README or docstring).
 - [ ] No UI code in core; transmission can be tested manually or via a small script.
 - [ ] Optional: packet count or status is available for the UI (e.g. return value or callback).

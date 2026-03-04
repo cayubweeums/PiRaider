@@ -203,4 +203,52 @@ def grab_all_bluetooth_interfaces() -> dict:
 
     return relevant_device_info
 
+
+def configure_interface(interface: str, channel: int = 6) -> bool:
+    """
+    Configure the interface to be in monitor mode and on a specific channel
+
+    Args:
+        interface: The interface to configure
+        channel: The channel to set the interface to. Default is 6.
+
+    Returns:
+        True if the interface was configured successfully, False otherwise
+    """
+
+    try:
+        log.info(f"Pulling interface {interface} down")
+        subprocess.run(["sudo", "ip", "link", "set", interface, "down"], check=True)
+        log.info(f"Interface {interface} pulled down successfully")
+    except subprocess.CalledProcessError as e:
+        log.error(f"Failed to pull interface {interface} down: {e}")
+        return False
+
+    try:
+        log.info(f"Setting interface {interface} to monitor mode")
+        subprocess.run(["sudo", "iw", "dev", interface, "set", "type", "monitor"], check=True)
+        log.info(f"Interface {interface} set to monitor mode successfully")
+    except subprocess.CalledProcessError as e:
+        log.error(f"Failed to set interface {interface} to monitor mode: {e}")
+        return False
+
+    try:
+        log.info(f"Bringing interface {interface} up")
+        subprocess.run(["sudo", "ip", "link", "set", interface, "up"], check=True)
+        log.info(f"Interface {interface} brought up successfully")
+    except subprocess.CalledProcessError as e:
+        log.error(f"Failed to bring interface {interface} up: {e}")
+        return False
+
+    try:
+        log.info(f"Setting interface {interface} to channel {channel}")
+        subprocess.run(["sudo", "iw", "dev", interface, "set", "channel", str(channel)], check=True)
+        log.info(f"Interface {interface} set to channel {channel} successfully")
+    except subprocess.CalledProcessError as e:
+        log.error(f"Failed to set interface {interface} to channel {channel}: {e}")
+        return False
+
+    return True
+
+
 #endregion

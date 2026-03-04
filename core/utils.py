@@ -1,7 +1,11 @@
 import json
 import re
+import subprocess
+import logging
 from typing import Any
 
+
+log = logging.getLogger(__name__)
 
 def parse_indented_output(
     text: str,

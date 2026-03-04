@@ -12,7 +12,10 @@ log = logging.getLogger(__name__)
 Config file format:
 {
     "wifi_device": "wlan0",
-    "bluetooth_device": "XX:XX:XX:XX:XX:XX"
+    "bluetooth_device": "XX:XX:XX:XX:XX:XX",
+    "running_processes": {
+        "rick_roll": "9234678" # Process ID
+    }
 }
 
 File location:
