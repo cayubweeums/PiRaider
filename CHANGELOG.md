@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/cayubweeums/PiRaider/compare/v1.10.0...v1.11.0) (2026-03-04)
+
+
+### Features
+
+* adds core logic for rick roll beacon prank ([9105bb2](https://github.com/cayubweeums/PiRaider/commit/9105bb26913802d0e3c43c33961703778af782c5))
+
 # [1.10.0](https://github.com/cayubweeums/PiRaider/compare/v1.9.0...v1.10.0) (2026-02-27)
 
 
