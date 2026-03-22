@@ -7,6 +7,7 @@ import scapy.packet
 from scapy.layers.dot11 import Dot11, Dot11Beacon, Dot11Elt, RadioTap
 
 from core.wifi import (
+    RICK_ROLL_CHANNEL,
     rick_roll_ssids,
     get_rick_roll_ssids,
     get_rick_roll_beacon_frames,
@@ -72,19 +73,22 @@ def test_rick_roll_ssids_full_list_in_order():
 
 
 def test_get_rick_roll_beacon_frames_returns_eight_packets():
-    """get_rick_roll_beacon_frames returns a list of exactly 8 Scapy packets."""
+    """get_rick_roll_beacon_frames returns a list of exactly 8 (packet, channel) tuples."""
     frames = get_rick_roll_beacon_frames()
     assert isinstance(frames, list)
     assert len(frames) == 8
-    for pkt in frames:
+    for pkt, channel in frames:
         assert isinstance(pkt, scapy.packet.Packet)
+        assert isinstance(channel, int)
+        assert channel == RICK_ROLL_CHANNEL
 
 
 def test_get_rick_roll_beacon_frames_ssids_in_order():
-    """Each beacon frame has SSID IE matching the eight Rick Roll SSIDs in order."""
+    """Each beacon frame has SSID IE matching the eight Rick Roll SSIDs in order; all on same channel."""
     frames = get_rick_roll_beacon_frames()
     assert len(frames) == 8
-    for i, pkt in enumerate(frames):
+    for i, (pkt, channel) in enumerate(frames):
+        assert channel == RICK_ROLL_CHANNEL
         elt = pkt[Dot11Elt]
         assert elt.ID == 0  # SSID
         info = elt.info if isinstance(elt.info, bytes) else elt.info.encode("utf-8")
@@ -95,7 +99,7 @@ def test_get_rick_roll_beacon_frames_ssids_in_order():
 def test_get_rick_roll_beacon_frames_structure():
     """Each returned packet has expected 802.11 beacon structure (Dot11, Dot11Beacon, Dot11Elt)."""
     frames = get_rick_roll_beacon_frames()
-    for pkt in frames:
+    for pkt, _ in frames:
         assert RadioTap in pkt
         assert Dot11 in pkt
         assert Dot11Beacon in pkt

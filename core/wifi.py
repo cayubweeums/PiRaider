@@ -1,6 +1,7 @@
 import os
 import signal
 import subprocess
+import threading
 import time
 import logging
 from multiprocessing import Process
@@ -16,7 +17,7 @@ from scapy.all import ( Dot11,
 
 from core.beacon import build_beacon_frame
 from core.config import config, get_key
-from core.radio import configure_interface
+from core.radio import configure_interface, set_interface_channel
 
 log = logging.getLogger(__name__)
 
@@ -53,17 +54,18 @@ def get_rick_roll_ssids(index: int = None) -> str:
         return rick_roll_ssids[0]
     return rick_roll_ssids[index]
 
-def get_rick_roll_beacon_frames() -> list[scapy.packet.Packet]:
-    """
-    Get the Rick Roll Beacon frames list of scapy packets
+# Single channel for all Rick Roll beacons so scanners see all 8 SSIDs
+RICK_ROLL_CHANNEL = 6
 
-    Args:
-        None
-    
-    Returns:
-        A list of Beacon frames scapy packets.
+
+def get_rick_roll_beacon_frames() -> list[tuple[scapy.packet.Packet, int]]:
     """
-    return [build_beacon_frame(ssid=ssid) for ssid in rick_roll_ssids]
+    Get the Rick Roll Beacon frames
+    """
+    return [
+        (build_beacon_frame(ssid=ssid, channel=RICK_ROLL_CHANNEL), RICK_ROLL_CHANNEL)
+        for ssid in rick_roll_ssids
+    ]
 
 def start_rick_roll_beacon() -> Process | None:
     """
@@ -86,28 +88,38 @@ def start_rick_roll_beacon() -> Process | None:
 
 def send_rick_roll_beacon() -> None:
     """
-    Send the Rick Roll Beacon Prank
-
-    ex python line: sendp(frame, iface=iface, inter=0.100, loop=10000)
-
+    Send the Rick Roll Beacon Prank. All 8 lyric SSIDs are sent on a single
+    channel so WiFi scanners see every SSID (set channel once, then cycle
+    through all beacons; each SSID sent 3x with ~1ms between, ~10–20ms before next).
     """
-    
-    # Grab frames to send
     frames = get_rick_roll_beacon_frames()
+    channel = RICK_ROLL_CHANNEL
 
     iface = get_key("wifi_device")
     if not iface:
         log.error("WiFi device not set in config, unable to start rick roll prank")
         return
 
-    if not configure_interface(iface):
+    if not configure_interface(iface, channel=channel):
         log.error(f"Failed to configure interface {iface}, unable to start rick roll prank")
         return
 
-    while True:
-        for beacon in frames:
-            sendp(beacon, iface=iface)
-            time.sleep(0.045)
+    set_interface_channel(iface, channel)
+    time.sleep(0.010)
+
+    # send_lock = threading.Lock()
+
+    def send_one(beacon):
+        while True:
+            # with send_lock:
+            sendp(beacon, iface=iface, inter=0.0001, count=3)
+            time.sleep(0.10)
+
+    threads = [threading.Thread(target=send_one, args=(b,), daemon=True) for b, _ in frames]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
 
 def stop_rick_roll_beacon() -> bool:
     """
